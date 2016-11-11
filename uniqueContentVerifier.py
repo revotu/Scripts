@@ -20,6 +20,7 @@ from pyvirtualdisplay import Display
 
 from openpyxl import load_workbook
 
+logging.basicConfig()
 selenium_logger = logging.getLogger(
     'selenium.webdriver.remote.remote_connection')
 selenium_logger.setLevel(logging.WARNING)
@@ -99,10 +100,10 @@ class UniqueContentVerifier(object):
                 (By.CSS_SELECTOR, 'span.st')))
         except:
             logger.error('Wait timeout, google again.')
-            self.driver.get(url)
-            wait = WebDriverWait(self.driver, self.WAIT_TIME)
-            snippets = wait.until(EC.presence_of_all_elements_located(
-                (By.CSS_SELECTOR, 'span.st')))
+#             self.driver.get(url)
+#             wait = WebDriverWait(self.driver, self.WAIT_TIME)
+#             snippets = wait.until(EC.presence_of_all_elements_located(
+#                 (By.CSS_SELECTOR, 'span.st')))
 
         page_source = self.driver.page_source.encode('utf-8')
 
@@ -138,18 +139,18 @@ class UniqueContentVerifier(object):
 
 
 def main():
-    verifier = UniqueContentVerifier()
+    verifier = UniqueContentVerifier(headless=True)
     
 #     print verifier.is_content_unique("from all you maggots voting last week! Now it")
 #     print verifier.is_content_unique("JIMMY PAGE Loses Planning Dispute With Neighbour")
 #     print verifier.is_content_unique("sideman career with our comprehensive playlist, featuring collaborations")
 #     print verifier.is_content_unique("This is a content summary only. Visit my website for dafasd  dafa")
 
-    filename = 'D:/www/scripts/reviews.xlsx'
+    filename = 'reviews.xlsx'
     wb = load_workbook(filename)
     ws = wb.active
     for index in range(2,7222):
-        ws.cell(row = index, column = 4).value = verifier.is_content_unique(ws.cell(row = index, column = 3).value)
+        ws.cell(row = index, column = 4).value = verifier.is_content_unique(ws.cell(row = index, column = 3).value.encode("utf8"))
         print index,ws.cell(row = index, column = 4).value
         wb.save(filename)
  
