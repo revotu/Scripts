@@ -23,8 +23,9 @@ from openpyxl import load_workbook
 logging.basicConfig()
 selenium_logger = logging.getLogger(
     'selenium.webdriver.remote.remote_connection')
-selenium_logger.setLevel(logging.INFO)
+selenium_logger.setLevel(logging.WARNING)
 logger = logging.getLogger('UniqueContentVerifier')
+logger.setLevel(logging.INFO)
 
 
 def RemovePunctuation(str_txt):
@@ -151,7 +152,7 @@ def main():
     ws = wb.active
     for index in range(2,7222):
         ws.cell(row = index, column = 4).value = verifier.is_content_unique(ws.cell(row = index, column = 3).value.encode("utf8"))
-        logging.info("%d => %s" % (index,ws.cell(row = index, column = 4).value))
+        logger.info("%d => %s" % (index,ws.cell(row = index, column = 4).value))
         wb.save(filename)
  
     verifier.close()
