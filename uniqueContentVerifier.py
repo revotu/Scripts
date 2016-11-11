@@ -76,7 +76,7 @@ class UniqueContentVerifier(object):
             self.display = Display(visible=0, size=(800, 600))
             self.display.start()
 
-        self.WAIT_TIME = 120
+        self.WAIT_TIME = 12
         options = webdriver.ChromeOptions()
         options.add_argument('--lang=%s' % lang)
         self.driver = webdriver.Chrome(chrome_options=options)
@@ -116,7 +116,6 @@ class UniqueContentVerifier(object):
             logger.error('Exception in fetching google snippet.')
             with open('google.html', 'w') as fp:
                 fp.write(page_source)
-            return False
 
         return True
 
@@ -151,7 +150,15 @@ def main():
     wb = load_workbook(filename)
     ws = wb.active
     for index in range(2,7222):
-        ws.cell(row = index, column = 4).value = verifier.is_content_unique(ws.cell(row = index, column = 3).value.encode("utf8"))
+        text = ws.cell(row = index, column = 3).value.encode("utf8")
+        text = text.lower()
+        text = text.replace("\n", "")
+        text = RemovePunctuation(text)
+        words = text.split()
+        if len(words) > 32:
+            words = words[:32]
+        text = " ".join(words)
+        ws.cell(row = index, column = 4).value = verifier.is_content_unique(text)
         logger.info("%d => %s" % (index,ws.cell(row = index, column = 4).value))
         wb.save(filename)
  
