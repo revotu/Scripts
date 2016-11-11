@@ -23,7 +23,7 @@ from openpyxl import load_workbook
 logging.basicConfig()
 selenium_logger = logging.getLogger(
     'selenium.webdriver.remote.remote_connection')
-selenium_logger.setLevel(logging.WARNING)
+selenium_logger.setLevel(logging.INFO)
 logger = logging.getLogger('UniqueContentVerifier')
 
 
@@ -151,7 +151,7 @@ def main():
     ws = wb.active
     for index in range(2,7222):
         ws.cell(row = index, column = 4).value = verifier.is_content_unique(ws.cell(row = index, column = 3).value.encode("utf8"))
-        print index,ws.cell(row = index, column = 4).value
+        logging.info("%d => %s" % (index,ws.cell(row = index, column = 4).value))
         wb.save(filename)
  
     verifier.close()
