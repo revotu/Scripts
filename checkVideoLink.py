@@ -6,11 +6,14 @@ from openpyxl.reader.excel import load_workbook
 
 def youtubeChecker(videoID):
     checkUrl = 'http://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=%s' % (videoID)
-    response = urllib.urlopen(checkUrl)
-    status = response.getcode()
-    if status == 200:
-        return True
-    else:
+    try:
+        response = urllib.urlopen(checkUrl)
+        status = response.getcode()
+        if status == 200:
+            return True
+        else:
+            return False
+    except:
         return False
 
 
