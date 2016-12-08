@@ -1,3 +1,4 @@
+import os
 import re
 import json
 import smtplib
@@ -50,8 +51,10 @@ def checkTransparencyReport(domain):
         data = response.read()
         reg = re.compile(r'{.+}')
         data = reg.findall(data)
+        dir = os.path.dirname(os.path.abspath(__file__))
+        filename = os.path.join(dir,'%s-request' % (domain))
         try:
-            with open('%s-request' % (domain)) as f:
+            with open(filename) as f:
                 sent_request_id_list = [id.strip() for id in f.readlines()]
             f.close()
         except:
@@ -72,7 +75,7 @@ def checkTransparencyReport(domain):
                         sent_request_id_list.append(request_id)
             if len(request_list) > 0:
                 send_email(domain, request_list)
-                with open('%s-request' % (domain),'w') as f:
+                with open(filename,'w') as f:
                     for request_id in sent_request_id_list:
                         f.write("%s\n" % request_id)
                 f.close()
