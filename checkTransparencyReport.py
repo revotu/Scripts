@@ -82,6 +82,6 @@ def checkTransparencyReport(domain):
 
 
 if __name__ == "__main__":
-    domainList = ['doriswedding.com','newadoringdress.com','ucenterdress.com']
+    domainList = ['doriswedding.com','newadoringdress.com','junebridals.com','ucenterdress.com']
     for domain in domainList:
         checkTransparencyReport(domain)
