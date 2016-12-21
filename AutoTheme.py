@@ -29,7 +29,10 @@ def cropImage(image ,width ,height):
 	img = Image.open(image)
 	half_the_width = img.size[0]/2
 	half_the_height = img.size[1]/2
-	img_target = img.crop((half_the_width - width/2 , half_the_height - height/2, half_the_width + width/2, half_the_height + height/2))
+	if img.size[0] < width or img.size[1] < height:
+		img_target = img.resize((width,height))
+	else:
+		img_target = img.crop((half_the_width - width/2 , half_the_height - height/2, half_the_width + width/2, half_the_height + height/2))
 	img_target.save(img_target_path)
 	
 	return img_target_name
@@ -82,7 +85,7 @@ def generateTemplateFile(themePath, template_handler, instance_handler, title, c
 			for repeat_file in repeat_file_list:
 				with open(os.path.join(themePath,repeat_file)) as repeat_file_handler:
 					repeat_file_content = repeat_file_handler.read()
-					img_reg = re.compile(r'src="(.+?)"')
+					img_reg = re.compile(r'src=["\'](.+?)["\']')
 					img_list = img_reg.findall(repeat_file_content)
 					repeat_file_imgs[repeat_file] = img_list
 					repeat_file_description[repeat_file] = remove_html_tags(repeat_file_content).split('.')[0].strip()
@@ -90,17 +93,21 @@ def generateTemplateFile(themePath, template_handler, instance_handler, title, c
 			with open(os.path.join(templatePath,repeat_file_template)) as repeat_file_template_handler:
 				repeat_file_template_content = repeat_file_template_handler.read()
 				repeat_file_image_section = repeat_file_template_content[repeat_file_template_content.find('{# IMAGE|'):repeat_file_template_content.find('#}') + len('#}')]
-				IMAGE_SIZE = repeat_file_template_content[repeat_file_template_content.find('{# IMAGE|') + len('{# IMAGE|'):repeat_file_template_content.find('#}')]
-				IMAGE_WIDTH = int(IMAGE_SIZE[:IMAGE_SIZE.find('x')])
-				IMAGE_HEIGHT = int(IMAGE_SIZE[IMAGE_SIZE.find('x') + len('x'):])
-			
+				if len(repeat_file_image_section) > 0:
+					IMAGE_SIZE = repeat_file_template_content[repeat_file_template_content.find('{# IMAGE|') + len('{# IMAGE|'):repeat_file_template_content.find('#}')]
+					IMAGE_WIDTH = int(IMAGE_SIZE[:IMAGE_SIZE.find('x')])
+					IMAGE_HEIGHT = int(IMAGE_SIZE[IMAGE_SIZE.find('x') + len('x'):])
+
 			for repeat_file_link in repeat_file_list:
-				repeat_file_img = random.sample(repeat_file_imgs[repeat_file_link],1)[0].split("/")
-				repeat_file_img_path = os.path.join(themePath,*repeat_file_img)
+				if len(repeat_file_image_section) > 0:
+					repeat_file_img = random.sample(repeat_file_imgs[repeat_file_link],1)[0].split("/")
+					repeat_file_img_path = os.path.join(themePath,*repeat_file_img)
 				
-				repeat_file_img_replace = cropImage(repeat_file_img_path, IMAGE_WIDTH, IMAGE_HEIGHT)
-				del repeat_file_img[-1]
-				repeat_file_img.append(repeat_file_img_replace)
+					repeat_file_img_replace = cropImage(repeat_file_img_path, IMAGE_WIDTH, IMAGE_HEIGHT)
+					del repeat_file_img[-1]
+					repeat_file_img.append(repeat_file_img_replace)
+				else:
+					repeat_file_img = []
 				
 				detailDescription = repeat_file_description[repeat_file_link]
 				detailDate = randomDate('January 1, 2016 1:30 PM', 'January 1, 2017 4:50 PM', '%B %d, %Y %I:%M %p', random.random())
@@ -164,5 +171,5 @@ def AutoTheme(theme):
 	AutoSitemap(themePath)
 
 if __name__ == "__main__":
-	theme = 'www.domante.com'
+	theme = 'www.mermaidlooks.com'
 	AutoTheme(theme)
