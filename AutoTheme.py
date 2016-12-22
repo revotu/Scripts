@@ -30,7 +30,18 @@ def cropImage(image ,width ,height):
 	half_the_width = img.size[0]/2
 	half_the_height = img.size[1]/2
 	if img.size[0] < width or img.size[1] < height:
-		img_target = img.resize((width,height))
+		if width*img.size[1]/img.size[0] >= height:
+			img_target = img.resize((width,width*img.size[1]/img.size[0]))
+			half_the_width = img_target.size[0]/2
+			half_the_height = img_target.size[1]/2
+			img_target = img_target.crop((half_the_width - width/2 , half_the_height - height/2, half_the_width + width/2, half_the_height + height/2))
+		elif height*img.size[0]/img.size[1] >= width:
+			img_target = img.resize((height*img.size[0]/img.size[1],height))
+			half_the_width = img_target.size[0]/2
+			half_the_height = img_target.size[1]/2
+			img_target = img_target.crop((half_the_width - width/2 , half_the_height - height/2, half_the_width + width/2, half_the_height + height/2))
+		else:
+			img_target = img.resize((width,height))
 	else:
 		img_target = img.crop((half_the_width - width/2 , half_the_height - height/2, half_the_width + width/2, half_the_height + height/2))
 	img_target.save(img_target_path)
@@ -56,6 +67,8 @@ def AutoSitemap(themePath):
 def generateTemplateFile(themePath, template_handler, instance_handler, title, content = ''):
 	templatePath = os.path.join(themePath,'template')
 	detailList = [x for x in os.listdir(themePath) if os.path.isfile(os.path.join(themePath,x))]
+	with open(os.path.join(templatePath,'category.txt')) as category_handler:
+		category = [x.strip() for x in category_handler]
 	for line in template_handler:
 		if '{{ title }}' in line:
 			instance_handler.write(line.replace('{{ title }}',title))
@@ -63,8 +76,6 @@ def generateTemplateFile(themePath, template_handler, instance_handler, title, c
 			instance_handler.write(line.replace('{{ content }}',content))
 		elif '<% category_snippet.html %>' in line:
 			replace_category_snippet = ''
-			with open(os.path.join(templatePath,'category.txt')) as category_handler:
-				category = [x.strip() for x in category_handler]
 			with open(os.path.join(templatePath,'category_snippet.html')) as category_snippet_handler:
 				category_snippet = category_snippet_handler.read()
 				for link in category:
@@ -109,12 +120,14 @@ def generateTemplateFile(themePath, template_handler, instance_handler, title, c
 				else:
 					repeat_file_img = []
 				
+				categoryLink = random.sample(category,1)[0]
+				categoryName = categoryLink.replace('.html','').replace('-',' ')
 				detailDescription = repeat_file_description[repeat_file_link]
 				detailDate = randomDate('January 1, 2016 1:30 PM', 'January 1, 2017 4:50 PM', '%B %d, %Y %I:%M %p', random.random())
 				repeat_file_section += repeat_file_template_content.replace('{{ detail.href }}',repeat_file_link)\
 					.replace('{{ detail.title }}',repeat_file_link.replace('.html','').replace('-',' '))\
 					.replace('{{ time }}',detailDate).replace(repeat_file_image_section,'/'.join(repeat_file_img))\
-					.replace('{{ detail.description }}',detailDescription)
+					.replace('{{ detail.description }}',detailDescription).replace('{{ category.href }}',categoryLink).replace('{{ category.name }}',categoryName)
 					
 			instance_handler.write(line.replace(line[line.find('<%'):line.find('%>') + len('%>')],repeat_file_section))
 		else:
@@ -171,5 +184,5 @@ def AutoTheme(theme):
 	AutoSitemap(themePath)
 
 if __name__ == "__main__":
-	theme = 'www.mermaidlooks.com'
+	theme = 'www.stylelittlegirl.com'
 	AutoTheme(theme)
