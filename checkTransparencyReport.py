@@ -11,6 +11,7 @@ from email.mime.multipart import MIMEMultipart
 def send_email(domain,request_list):
     Me = 'support@dresspirit.com'
     To = ['632624460@qq.com', 'donglongtu@mingdabeta.com','qinyingjie@mingdabeta.com','231130161@qq.com','zhangpeng@mingdabeta.com']
+    #To = ['632624460@qq.com']
 
     # Create the container (outer) email message.
     msg = MIMEMultipart()
@@ -40,7 +41,7 @@ def checkTransparencyReport(domain):
         response = urlopen(req)
     except URLError as e:
         if hasattr(e, 'reason'):
-            print 'We failed to reach a server'
+            print 'We failed to reach a server for domain : %s' % (domain)
             print 'Reason:', e.reason
         elif hasattr(e, 'code'):
             print 'The server couldn\'t fulfill the request'
@@ -82,6 +83,7 @@ def checkTransparencyReport(domain):
 
 
 if __name__ == "__main__":
-    domainList = ['doriswedding.com','newadoringdress.com','junebridals.com','ucenterdress.com']
+    domainList = ['doriswedding.com','newadoringdress.com','junebridals.com','ucenterdress.com','sausalitostory.com',
+                  'bridalmelissa.com','amorasecret.com','uniqbridal.com','lovingbridal.com','amorrosado.com','ms-right.com']
     for domain in domainList:
         checkTransparencyReport(domain)
