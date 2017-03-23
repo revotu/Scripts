@@ -97,7 +97,7 @@ class checkKeywordRanking(object):
         return False
 
 def main():
-    rank = checkKeywordRanking()
+    rank = checkKeywordRanking(headless=True)
     keywordList = ['cheap wedding dresses','cheap prom dresses','cheap bridesmaid dresses']
     siteList = ['www.junebridals.com','www.doriswedding.com','www.ucenterdress.com']
     
