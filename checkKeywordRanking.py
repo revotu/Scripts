@@ -20,12 +20,28 @@ from pyvirtualdisplay import Display
 
 from openpyxl import load_workbook
 
+import MySQLdb
+
 logging.basicConfig()
 selenium_logger = logging.getLogger(
     'selenium.webdriver.remote.remote_connection')
 selenium_logger.setLevel(logging.WARNING)
 logger = logging.getLogger('checkUrlRanking')
 logger.setLevel(logging.INFO)
+
+
+def updateRank(date,keyword,site,rank):
+    conn = MySQLdb.connect('45.79.71.23','mdtrade','trade@mingDA123','servers',charset="utf8")
+    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+
+    cursor.execute('INSERT INTO keywords_ranking (keyword,site,date,rank) VALUES("%s","%s","%s","%s")' %(keyword,site,date,rank))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+    
+    return True
+
 
 class checkKeywordRanking(object):
     def __init__(self, lang='en', headless=False):
@@ -104,12 +120,13 @@ def main():
     for keyword in keywordList:
         for site in siteList:
             result =  rank.siteKeywordRank(keyword, site)
+            date = time.strftime("%Y-%m-%d")
             if result == False:
                 result = '100+'
+            rank = result
             with open('keywordRank','a') as f:
-                f.write('%s\t%s\t%s\t%s\n' % (time.strftime("%Y-%m-%d"),keyword,site,result))
-                
-
+                f.write('%s\t%s\t%s\t%s\n' % (date,keyword,site,rank))
+            updateRank(date,keyword,site,rank)
  
     rank.close()
 
