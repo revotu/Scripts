@@ -113,13 +113,13 @@ class checkKeywordRanking(object):
         return False
 
 def main():
-    rank = checkKeywordRanking(headless=True)
+    rankInstance = checkKeywordRanking(headless=True)
     keywordList = ['cheap wedding dresses','cheap prom dresses','cheap bridesmaid dresses']
     siteList = ['www.junebridals.com','www.doriswedding.com','www.ucenterdress.com']
     
     for keyword in keywordList:
         for site in siteList:
-            result =  rank.siteKeywordRank(keyword, site)
+            result =  rankInstance.siteKeywordRank(keyword, site)
             date = time.strftime("%Y-%m-%d")
             if result == False:
                 result = '100+'
@@ -128,7 +128,7 @@ def main():
                 f.write('%s\t%s\t%s\t%s\n' % (date,keyword,site,rank))
             updateRank(date,keyword,site,rank)
  
-    rank.close()
+    rankInstance.close()
 
 
 if __name__ == '__main__':
