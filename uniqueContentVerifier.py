@@ -149,8 +149,8 @@ def main():
     filename = 'reviews.xlsx'
     wb = load_workbook(filename)
     ws = wb.active
-    for index in range(2,7222):
-        text = ws.cell(row = index, column = 3).value.encode("utf8")
+    for index in range(1,32920):
+        text = ws.cell(row = index, column = 4).value.encode("utf8")
         text = text.lower()
         text = text.replace("\n", "")
         text = RemovePunctuation(text)
@@ -158,8 +158,8 @@ def main():
         if len(words) > 32:
             words = words[:32]
         text = " ".join(words)
-        ws.cell(row = index, column = 4).value = verifier.is_content_unique(text)
-        logger.info("%d => %s" % (index,ws.cell(row = index, column = 4).value))
+        ws.cell(row = index, column = 5).value = verifier.is_content_unique(text)
+        logger.info("%d => %s" % (index,ws.cell(row = index, column = 5).value))
         wb.save(filename)
  
     verifier.close()
