@@ -119,8 +119,16 @@ def main():
                                'modest bridesmaid dresses','casual wedding dresses','maternity bridesmaid dresses',
                                'country wedding dresses','bridesmaid dresses under 100','modest wedding dresses',
                                'wedding dresses for women over 50','long prom dresses for short girls','plus size wedding dresses'],
-        'www.doriswedding.com':['cheap wedding dresses','cheap prom dresses','cheap bridesmaid dresses'],
-        'www.ucenterdress.com':['cheap wedding dresses','cheap prom dresses','cheap bridesmaid dresses']
+        'www.doriswedding.com':['cheap wedding dresses','cheap prom dresses','cheap bridesmaid dresses',
+                                'wedding dresses for older brides','outdoor mother of the bride dresses','country wedding dresses',
+                                'cocktail dresses for women over 50','prom dresses for big bust','8th grade graduation dresses',
+                                'mother of the bride dresses for beach wedding','modest wedding dresses ','petite wedding dresses',
+                                'vow renewal dresses'],
+        'www.ucenterdress.com':['cheap wedding dresses','cheap prom dresses','cheap bridesmaid dresses',
+                                'bohemian prom dresses','muslim evening dresses','country wedding dresses',
+                                'sexy mother of the bride dresses','fall wedding dresses','modest prom dresses',
+                                'plus size special occasion dresses','victorian wedding dresses','mormon prom dresses',
+                                'off the shoulder prom dresses']
         }
     
     for site in keywordSiteList:
@@ -130,7 +138,7 @@ def main():
             if result == False:
                 result = '100+'
             rank = result
-            with open('keywordRank','a') as f:
+            with open(os.path.join(os.path.dirname(os.path.realpath(__file__)),'keywordRank'),'a') as f:
                 f.write('%s\t%s\t%s\t%s\n' % (date,keyword,site,rank))
             updateRank(date,keyword,site,rank)
  
