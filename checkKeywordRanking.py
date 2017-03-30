@@ -114,11 +114,17 @@ class checkKeywordRanking(object):
 
 def main():
     rankInstance = checkKeywordRanking(headless=True)
-    keywordList = ['cheap wedding dresses','cheap prom dresses','cheap bridesmaid dresses']
-    siteList = ['www.junebridals.com','www.doriswedding.com','www.ucenterdress.com']
+    keywordSiteList = {
+        'www.junebridals.com':['cheap wedding dresses','cheap prom dresses','cheap bridesmaid dresses',
+                               'modest bridesmaid dresses','casual wedding dresses','maternity bridesmaid dresses',
+                               'country wedding dresses','bridesmaid dresses under 100','modest wedding dresses',
+                               'wedding dresses for women over 50','long prom dresses for short girls','plus size wedding dresses'],
+        'www.doriswedding.com':['cheap wedding dresses','cheap prom dresses','cheap bridesmaid dresses'],
+        'www.ucenterdress.com':['cheap wedding dresses','cheap prom dresses','cheap bridesmaid dresses']
+        }
     
-    for keyword in keywordList:
-        for site in siteList:
+    for site in keywordSiteList:
+        for keyword in keywordSiteList[site]:
             result =  rankInstance.siteKeywordRank(keyword, site)
             date = time.strftime("%Y-%m-%d")
             if result == False:
