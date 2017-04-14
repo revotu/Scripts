@@ -8,6 +8,7 @@ import string
 import time
 import traceback
 import utils
+import random
 from lxml import html
 from lxml.html import clean
 
@@ -85,12 +86,17 @@ class checkKeywordRanking(object):
 
     def siteKeywordRank(self, keyword, site):
         raw_query = keyword
-        query = urllib.urlencode({'q': raw_query})
-        url = 'https://www.google.com/?gws_rd=ssl#%s' % (query)
+        #query = urllib.urlencode({'q': raw_query})
+        #url = 'https://www.google.com/?gws_rd=ssl#%s' % (query)
+        url = 'http://www.google.com/'
 
         try:
             self.driver.get(url)
-            time.sleep(15)
+            self.driver.find_element(By.NAME, 'q').send_keys("%s" %(raw_query))
+            self.driver.find_element(By.NAME, 'q').submit()
+            
+            
+            time.sleep(random.randint(5,20))
             wait = WebDriverWait(self.driver, self.WAIT_TIME)
             hrefs = wait.until(EC.presence_of_all_elements_located(
                 (By.CSS_SELECTOR, 'h3.r > a')))
