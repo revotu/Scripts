@@ -125,7 +125,7 @@ def main():
                                'modest bridesmaid dresses','casual wedding dresses','maternity bridesmaid dresses',
                                'country wedding dresses','bridesmaid dresses under 100','modest wedding dresses',
                                'wedding dresses for women over 50','long prom dresses for short girls','plus size wedding dresses'],
-        'www.doriswedding.com':['cheap wedding dresses','cheap prom dresses','cheap bridesmaid dresses',
+        'www.dorriswedding.com':['cheap wedding dresses','cheap prom dresses','cheap bridesmaid dresses',
                                 'wedding dresses for older brides','outdoor mother of the bride dresses','country wedding dresses',
                                 'cocktail dresses for women over 50','prom dresses for big bust','8th grade graduation dresses',
                                 'mother of the bride dresses for beach wedding','modest wedding dresses ','petite wedding dresses',
@@ -139,6 +139,7 @@ def main():
     
     for site in keywordSiteList:
         for keyword in keywordSiteList[site]:
+            time.sleep(60)
             result =  rankInstance.siteKeywordRank(keyword, site)
             date = time.strftime("%Y-%m-%d")
             if result == False:
