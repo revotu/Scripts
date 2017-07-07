@@ -86,7 +86,9 @@ def refineTemplates(templates):
 
 
 def main():
-    templates = 'D:\\work\\seo_server\\_templates'
+    templates = r'D:\work\seo_server\templates'
+    print templates
+    return
     refineTemplates(templates)
 
 if __name__ == "__main__":
