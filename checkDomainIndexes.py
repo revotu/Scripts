@@ -25,8 +25,13 @@ logger.setLevel(logging.INFO)
 def searchIndexes():
     indexes = [
         'http://www.ladyfashions.net/introduce.html',
+        'http://www.ladyfashions.net/recommendations.html',
         'http://www.marriagemode.com/guide.html',
-        'http://www.promdresscodes.com/customized.html'
+        'http://www.marriagemode.com/editor-picks.html',
+        'http://www.promdresscodes.com/customized.html',
+        'http://www.promdresscodes.com/selected.html',
+        'http://www.healthcn.org/bible.html',
+        'http://bgtopics.com/manual.html'
     ]
     searchLinks = {}
     for index in indexes:
@@ -37,6 +42,7 @@ def searchIndexes():
             html = urllib2.urlopen(url).read()
             seo_link = re.findall(r'<a href=["\'](.+?)["\']', html)
             if seo_link:
+                print seo_link[0]
                 searchLinks[seo_link[0]] = url
     return searchLinks
 
@@ -97,20 +103,39 @@ class checkDomainIndexes(object):
         return False
 
 def main():
-    indexInstance = checkDomainIndexes()
-    searchLinks = searchIndexes()
+    # indexInstance = checkDomainIndexes()
+    # searchLinks = searchIndexes()
+    #
+    # indexLinks = domainIndexesFromDB()
+    # for indexLink in indexLinks:
+    #     status = indexInstance.domainIndexStatus(indexLink)
+    #     with open('index-status.txt', 'a') as f:
+    #         if indexLink in searchLinks:
+    #             f.write('{}\t{}\t{}\t{}\n'.format(indexLink.split('/')[-2], status, True, searchLinks[indexLink]))
+    #         else:
+    #             f.write('{}\t{}\t{}\n'.format(indexLink.split('/')[-2], status, False))
+    #
+    # indexInstance.close()
+    #searchLinks = searchIndexes()
 
-    indexLinks = domainIndexesFromDB()
-    for indexLink in indexLinks:
-        status = indexInstance.domainIndexStatus(indexLink)
-        with open('index-status.txt', 'a') as f:
-            if indexLink in searchLinks:
-                f.write('{}\t{}\t{}\t{}\n'.format(indexLink.split('/')[-2], status, True, searchLinks[indexLink]))
-            else:
-                f.write('{}\t{}\t{}\n'.format(indexLink.split('/')[-2], status, False))
+    with open(r'C:\Users\Administrator\Desktop\target_list.txt') as f:
+        all = f.read().splitlines()
 
-    indexInstance.close()
+    with open(r'C:\Users\Administrator\Desktop\has.txt') as f:
+        has = f.read().splitlines()
 
+    domain_all = {}
+    for a in all:
+        domain_all[a.split('/')[2].replace('www.', '')] = a
+
+    print domain_all
+    for h in has:
+        domain = h.split('/')[2].replace('www.', '')
+        if domain in domain_all:
+            del domain_all[domain]
+
+    for v in domain_all:
+        print domain_all[v]
 
 if __name__ == '__main__':
     main()
