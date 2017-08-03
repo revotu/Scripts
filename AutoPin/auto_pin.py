@@ -62,20 +62,25 @@ class AutoPin(object):
                     self.driver.get(url)
                     pinnedImages = []
                     while True:
-                        currentImage = self.driver.find_element_by_xpath('//div[@id="w-featurePics"]/a').get_attribute('href')
-                        if currentImage in pinnedImages:
-                            break
-                        else:
-                            pinnedImages.append(currentImage)
-                            logger.info('Auto pin Image : %s' % currentImage)
-                        self.driver.find_element_by_xpath('//div[@id="w-featurePics"]/div').click()
-                        if len(self.driver.window_handles) > 1:
-                            self.driver.switch_to.window(self.driver.window_handles[-1])
-                            self.driver.find_element_by_xpath('//div[@role="button"]//p[contains(text(), "%s")]' % board).click()
+                        try:
+                            currentImage = self.driver.find_element_by_xpath('//div[@id="w-featurePics"]/a').get_attribute('href')
+                            if currentImage in pinnedImages:
+                                break
+                            else:
+                                pinnedImages.append(currentImage)
+                                logger.info('Auto pin Image : %s' % currentImage)
+                            self.driver.find_element_by_xpath('//div[@id="w-featurePics"]/div').click()
+                            if len(self.driver.window_handles) > 1:
+                                self.driver.switch_to.window(self.driver.window_handles[-1])
+                                self.driver.find_element_by_xpath('//div[@role="button"]//p[contains(text(), "%s")]' % board).click()
+                                time.sleep(2)
+                                self.driver.close()
+                                self.driver.switch_to.window(self.driver.window_handles[0])
+                            self.driver.find_element_by_xpath('//div[@id="prodthumbnails"]/div/a[1]').click()
                             time.sleep(2)
-                            self.driver.switch_to.window(self.driver.window_handles[0])
-                        self.driver.find_element_by_xpath('//div[@id="prodthumbnails"]/div/a[1]').click()
-                        time.sleep(2)
+                        except Exception:
+                            logger.error('Failed auto pin!')
+                            break
         except Exception:
             logger.error('Failed auto pin!')
             return
@@ -83,8 +88,8 @@ class AutoPin(object):
 def main():
     username = 'support@junebridals.com'
     password = 'mingDA@1509'
-    pinurl = 'https://www.junebridals.com/casual-wedding-dresses.html'
-    board = 'Casual Wedding Dresses'
+    pinurl = 'https://www.junebridals.com/plus-size-wedding-dresses.html'
+    board = 'Plus Size Wedding Dresses'
 
     pin = AutoPin()
     pin.AutoPin(username, password, pinurl, board)
