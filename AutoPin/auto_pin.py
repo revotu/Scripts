@@ -79,7 +79,7 @@ class AutoPin(object):
                             self.driver.find_element_by_xpath('//div[@id="prodthumbnails"]/div/a[1]').click()
                             time.sleep(2)
                         except Exception:
-                            logger.error('Failed auto pin!')
+                            logger.error('Failed auto pin! Continue another to pin')
                             break
         except Exception:
             logger.error('Failed auto pin!')
